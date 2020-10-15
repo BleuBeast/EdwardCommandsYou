@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:entries="@array/command_lengths"
+        android:entryValues="@array/command_lengths"
+        android:key="pref_lengthOfCommand"
+        android:title="Length of Command"
+        android:summary="Number of Steps in Command Sequence"
+        android:persistent="true"
+        android:defaultValue="4"/>
+    <ListPreference
+        android:entries="@array/number_of_rounds"
+        android:entryValues="@array/number_of_rounds"
+        android:key="pref_numberOfRounds"
+        android:title="Number of Rounds"
+        android:summary="Number of Command Sequences Edward Gives"
+        android:persistent="true"
+        android:defaultValue="5"/>
+    <ListPreference
+        android:entries="@array/in_reverse"
+        android:entryValues="@array/in_reverse"
+        android:key="pref_answerInReverse"
+        android:title="Obey in Reverse Order"
+        android:summary="Sets if You Should Replicate Commands in Reverse Order"
+        android:persistent="true"
+        android:defaultValue="no"/>
+</PreferenceScreen>
