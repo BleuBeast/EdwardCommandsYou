@@ -159,8 +159,14 @@ public class MainActivityFragment extends Fragment {
     // All the buttons flash at once
     // lights up the buttons in a sequence
     private void animateCommand() {
-        for (Button b : commandSequence) {
-            animateAlphaBlink(b);
+        for (int i = 0; i < commandSequence.size(); i++) {
+            final int finalI = i;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    animateAlphaBlink(commandSequence.get(finalI));
+                }
+            }, (i*500));
         }
     }
 
