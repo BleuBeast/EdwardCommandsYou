@@ -1,12 +1,17 @@
 package com.example.edwardcommandsyou;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -55,6 +60,20 @@ public class MainActivityFragment extends Fragment {
                 button.setOnClickListener(gameButtonsListener);
             }
         }
+        Button button1 = (Button) view.findViewById(R.id.button1);
+        Button button2 = (Button) view.findViewById(R.id.button2);
+        Button button3 = (Button) view.findViewById(R.id.button3);
+        Button button4 = (Button) view.findViewById(R.id.button4);
+        Button button5 = (Button) view.findViewById(R.id.button5);
+        Button button6 = (Button) view.findViewById(R.id.button6);
+        button1.setBackgroundResource(R.color.buttonColor1);
+        button2.setBackgroundResource(R.color.buttonColor2);
+        button3.setBackgroundResource(R.color.buttonColor3);
+        button4.setBackgroundResource(R.color.buttonColor4);
+        button5.setBackgroundResource(R.color.buttonColor5);
+        button6.setBackgroundResource(R.color.buttonColor6);
+
+        createCommandSequence(3);
         return view;
     }
 
@@ -85,46 +104,68 @@ public class MainActivityFragment extends Fragment {
         @Override
         public void onClick(View view) {
             Button button = ((Button) view);
-
-            // this section should check if correct button has been pressed
-            int index = !inReverse ? stepsTakenInObeying : (commandLength - 1 - stepsTakenInObeying);
-            boolean isCorrect = commandSequence.get(index).equals(button);
-
-            // the button has been pressed so another step has been taken in obeying the sequence
-            ++stepsTakenInObeying;
-            if (isCorrect) {
-                // if a correct button was pressed and we are at the end of a command
-                if (stepsTakenInObeying == commandLength) {
-                    // if a correct button was pressed and we are at the end of a round
-                    if (roundProgress == roundLength) {
-                        // reset round counter
-                        roundProgress = 0;
-                    }
-                    // reset step in command counter
-                    stepsTakenInObeying = 0;
-                }
-            }
-            else {
-
-            }
+            animateCommand();
+//            // this section should check if correct button has been pressed
+//            int index = !inReverse ? stepsTakenInObeying : (commandLength - 1 - stepsTakenInObeying);
+//            boolean isCorrect = commandSequence.get(index).equals(button);
+//
+//            // the button has been pressed so another step has been taken in obeying the sequence
+//            ++stepsTakenInObeying;
+//            if (isCorrect) {
+//                // if a correct button was pressed and we are at the end of a command
+//                if (stepsTakenInObeying == commandLength) {
+//                    // if a correct button was pressed and we are at the end of a round
+//                    if (roundProgress == roundLength) {
+//                        // reset round counter
+//                        roundProgress = 0;
+//                    }
+//                    // reset step in command counter
+//                    stepsTakenInObeying = 0;
+//                }
+//            }
+//            else {
+//
+//            }
         }
     };
 
+    private void animateAlphaBlink(Button button) {
+        Animation animation = new AlphaAnimation(1,0);
+        animation.setRepeatCount(5);
+        animation.setDuration(500);
+        button.startAnimation(animation);
+    }
+
+    // two runnable's run at same time so first delay must be less than second
+    private void animateColorBlink(final Button button) {
+        final Drawable background = button.getBackground();
+        // delay then light up button by changing color
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                button.setBackgroundResource(R.color.lightup);
+            }
+        }, 250);
+        // delay then change to back to normal color
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                button.setBackground(background);
+            }
+        }, 500);
+    }
+
+    // This doesn't work for animateAlphaBlink or animateColorBlink
+    // All the buttons flash at once
     // lights up the buttons in a sequence
     private void animateCommand() {
-        for (int step = 0; step < commandLength; step++) {
-            int index = !inReverse ? step : (commandLength - 1 - step);
-            Button button = commandSequence.get(index);
-            // animate light up
-
-            // make a delay
+        for (Button b : commandSequence) {
+            animateAlphaBlink(b);
         }
-        // create a new command for the next round
-        createCommandSequence();
     }
 
     // creates a sequence of buttons for a command of given length
-    private void createCommandSequence() {
+    private void createCommandSequence(int commandLength) {
         commandSequence.clear();
         for (int i = 0; i < commandLength; i++) {
             int whichRow = random.nextInt(3);

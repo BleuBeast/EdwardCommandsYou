@@ -54,18 +54,16 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/button1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/buttonColor1" />
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/buttonColor2" />
+                android:layout_weight="1" />
 
         </LinearLayout>
 
@@ -79,15 +77,13 @@
                 android:id="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/buttonColor3" />
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/button4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/buttonColor4" />
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
@@ -100,15 +96,13 @@
                 android:id="@+id/button5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/buttonColor5" />
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/button6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/buttonColor6" />
+                android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 

@@ -9,4 +9,5 @@
     <color name="buttonColor4">#0F17FA</color>
     <color name="buttonColor5">#FF00AA</color>
     <color name="buttonColor6">#FAB30F</color>
+    <color name="lightup">#000000</color>
 </resources>
