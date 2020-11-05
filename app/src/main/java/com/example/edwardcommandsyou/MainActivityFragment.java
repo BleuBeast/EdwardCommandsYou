@@ -54,9 +54,9 @@ public class MainActivityFragment extends Fragment {
         buttonLinearLayouts[1] = (LinearLayout) view.findViewById(R.id.row2LinearLayout);
         buttonLinearLayouts[2] = (LinearLayout) view.findViewById(R.id.row3LinearLayout);
 
-        for (int row = 0; row < buttonLinearLayouts.length; row++) {
-            for (int column = 0; column < buttonLinearLayouts[row].getChildCount(); column++) {
-                Button button = (Button) buttonLinearLayouts[row].getChildAt(column);
+        for (LinearLayout buttonLinearLayout : buttonLinearLayouts) {
+            for (int column = 0; column < buttonLinearLayout.getChildCount(); column++) {
+                Button button = (Button) buttonLinearLayout.getChildAt(column);
                 button.setOnClickListener(gameButtonsListener);
             }
         }
@@ -73,7 +73,7 @@ public class MainActivityFragment extends Fragment {
         button5.setBackgroundResource(R.color.buttonColor5);
         button6.setBackgroundResource(R.color.buttonColor6);
 
-        createCommandSequence(3);
+        createCommandSequence(4);
         return view;
     }
 
@@ -131,7 +131,7 @@ public class MainActivityFragment extends Fragment {
 
     private void animateAlphaBlink(Button button) {
         Animation animation = new AlphaAnimation(1,0);
-        animation.setRepeatCount(5);
+        //animation.setRepeatCount(5);
         animation.setDuration(500);
         button.startAnimation(animation);
     }
@@ -155,19 +155,36 @@ public class MainActivityFragment extends Fragment {
         }, 500);
     }
 
+    private void enableButtons(boolean enable) {
+        for (LinearLayout buttonLinearLayout : buttonLinearLayouts) {
+            for (int column = 0; column < buttonLinearLayout.getChildCount(); column++) {
+                Button button = (Button) buttonLinearLayout.getChildAt(column);
+                button.setEnabled(enable);
+            }
+        }
+    }
+
     // This doesn't work for animateAlphaBlink or animateColorBlink
     // All the buttons flash at once
     // lights up the buttons in a sequence
     private void animateCommand() {
+        enableButtons(false);
         for (int i = 0; i < commandSequence.size(); i++) {
             final int finalI = i;
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    animateAlphaBlink(commandSequence.get(finalI));
+                    animateColorBlink(commandSequence.get(finalI));
                 }
-            }, (i*500));
+            }, (i*600));
         }
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                enableButtons(true);
+                createCommandSequence(4);
+            }
+        }, 600*commandSequence.size());
     }
 
     // creates a sequence of buttons for a command of given length
