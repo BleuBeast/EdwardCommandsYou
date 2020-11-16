@@ -27,27 +27,34 @@ public class MainActivityFragment extends Fragment {
     private Handler handler; // for delaying flashes of buttons
     private TextView yourTurnTextView; // for displaying if it is your turn or Edward's
     private LinearLayout[] buttonLinearLayouts; // array of all the rows of buttons in the game
-    private int stepsTakenInObeying; // how far the player has gotten in the command sequence
+   // private int stepsTakenInObeying; // how far the player has gotten in the command sequence
     private int roundProgress; // how far the player is into the round of sequences
-    private List<Button> commandSequence; // sequence of buttons for a sequence of commands
+    private ArrayList<Button> commandSequence; // sequence of buttons for a sequence of commands
     private boolean inReverse;
     private int roundLength;
-    private int commandLength;
+    private int commandLength=1;
+    private int steps = 0;
+    public View view;
+    private boolean isYourTurn = false;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        view = inflater.inflate(R.layout.fragment_main, container, false);
 
+        //yourTurnTextView = (TextView) view.findViewById(yourTurnTextView.getId());
 
         random = new SecureRandom();
         handler = new Handler();
-        stepsTakenInObeying = 0;
+        //stepsTakenInObeying = 0;
         roundProgress = 0;
         commandSequence = new ArrayList<>();
 
         yourTurnTextView = (TextView) view.findViewById(R.id.yourTurnTextView);
+        //yourTurnTextView.setText(R.string.your_turn);
+        changeTurn();
+        System.out.println(yourTurnTextView.getText());
 
         buttonLinearLayouts = new LinearLayout[3];
         buttonLinearLayouts[0] = (LinearLayout) view.findViewById(R.id.row1LinearLayout);
@@ -73,8 +80,16 @@ public class MainActivityFragment extends Fragment {
         button5.setBackgroundResource(R.color.buttonColor5);
         button6.setBackgroundResource(R.color.buttonColor6);
 
-        createCommandSequence(4);
+        createCommandSequence();
+        animateCommand();
         return view;
+    }
+
+    private void changeTurn () //Used to tell the user on screen whose turn it is
+    {
+        if (!isYourTurn) yourTurnTextView.setText(R.string.your_turn);
+        if (isYourTurn) yourTurnTextView.setText(R.string.edwards_turn);
+        isYourTurn = !isYourTurn;
     }
 
     public void updateInReverse(SharedPreferences sharedPreferences) {
@@ -103,8 +118,35 @@ public class MainActivityFragment extends Fragment {
     private OnClickListener gameButtonsListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            Button button = ((Button) view);
-            animateCommand();
+            System.out.println("Button clicked");
+            System.out.println(commandLength);
+            Button userInput = ((Button) view);
+            if (userInput.equals(commandSequence.get(steps)))
+            {
+                System.out.println("Right answer");
+                steps++;
+                if (commandLength==steps)
+                {
+                    System.out.println("Made it through the round");
+                    commandLength++;
+                    steps = 0;
+                    createCommandSequence();
+                    animateCommand();
+                }
+            }
+            else
+            {
+                // Display some message saying incorrect
+                // print (you made it x rounds!)
+                System.out.println("Wrong answer");
+                commandLength = 1;
+                steps = 0;
+                createCommandSequence();
+                animateCommand();
+                // Says how many you made it
+            }
+
+
 //            // this section should check if correct button has been pressed
 //            int index = !inReverse ? stepsTakenInObeying : (commandLength - 1 - stepsTakenInObeying);
 //            boolean isCorrect = commandSequence.get(index).equals(button);
@@ -145,14 +187,14 @@ public class MainActivityFragment extends Fragment {
             public void run() {
                 button.setBackgroundResource(R.color.lightup);
             }
-        }, 250);
+        }, 500);
         // delay then change to back to normal color
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 button.setBackground(background);
             }
-        }, 500);
+        }, 1000);
     }
 
     private void enableButtons(boolean enable) {
@@ -164,11 +206,18 @@ public class MainActivityFragment extends Fragment {
         }
     }
 
+    private void reset()
+    {
+        commandSequence.clear();
+        commandLength=1;
+    }
+
     // This doesn't work for animateAlphaBlink or animateColorBlink
     // All the buttons flash at once
     // lights up the buttons in a sequence
     private void animateCommand() {
         enableButtons(false);
+        changeTurn();
         for (int i = 0; i < commandSequence.size(); i++) {
             final int finalI = i;
             handler.postDelayed(new Runnable() {
@@ -176,19 +225,21 @@ public class MainActivityFragment extends Fragment {
                 public void run() {
                     animateColorBlink(commandSequence.get(finalI));
                 }
-            }, (i*600));
+            }, (i*1500));
         }
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 enableButtons(true);
-                createCommandSequence(4);
+                changeTurn();
             }
-        }, 600*commandSequence.size());
+        }, 1500*commandSequence.size());
+        System.out.println("Animation complete");
+
     }
 
     // creates a sequence of buttons for a command of given length
-    private void createCommandSequence(int commandLength) {
+    private void createCommandSequence() {
         commandSequence.clear();
         for (int i = 0; i < commandLength; i++) {
             int whichRow = random.nextInt(3);
@@ -196,5 +247,10 @@ public class MainActivityFragment extends Fragment {
             Button button = (Button) buttonLinearLayouts[whichRow].getChildAt(whichColumn);
             commandSequence.add(button);
         }
+        System.out.println("Command sequence created");/*
+        for ( int i = 0 ; i<commandLength ; i++)
+        {
+            System.out.println(commandSequence.get(i).getSolidColor());
+        }*/
     }
 }
