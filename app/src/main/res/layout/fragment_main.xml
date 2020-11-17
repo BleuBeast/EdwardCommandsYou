@@ -30,6 +30,15 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/levelTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/spacing"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+
+        <TextView
             android:id="@+id/yourTurnTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

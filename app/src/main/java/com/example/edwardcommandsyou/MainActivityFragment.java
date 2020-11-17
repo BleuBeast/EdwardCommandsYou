@@ -33,6 +33,7 @@ public class MainActivityFragment extends Fragment {
     private SecureRandom random; // for randomizing button flashes
     private Handler handler; // for delaying flashes of buttons
     private TextView yourTurnTextView; // for displaying if it is your turn or Edward's
+    private TextView levelTextView; // for displaying level number
     private LinearLayout[] buttonLinearLayouts; // array of all the rows of buttons in the game
    // private int stepsTakenInObeying; // how far the player has gotten in the command sequence
     private int roundProgress; // how far the player is into the round of sequences
@@ -58,10 +59,11 @@ public class MainActivityFragment extends Fragment {
         roundProgress = 0;
         commandSequence = new ArrayList<>();
 
+        levelTextView = (TextView) view.findViewById(R.id.levelTextView);
+        updateLevelText();
+
         yourTurnTextView = (TextView) view.findViewById(R.id.yourTurnTextView);
         //yourTurnTextView.setText(R.string.your_turn);
-        changeTurn();
-        System.out.println(yourTurnTextView.getText());
 
         buttonLinearLayouts = new LinearLayout[3];
         buttonLinearLayouts[0] = (LinearLayout) view.findViewById(R.id.row1LinearLayout);
@@ -89,14 +91,25 @@ public class MainActivityFragment extends Fragment {
 
         createCommandSequence();
         animateCommand();
+
+        changeTurn();
+        System.out.println(yourTurnTextView.getText());
+
         return view;
     }
 
     private void changeTurn () //Used to tell the user on screen whose turn it is
     {
+        System.out.println("I have made it to change turn");
         if (!isYourTurn) yourTurnTextView.setText(R.string.your_turn);
         if (isYourTurn) yourTurnTextView.setText(R.string.edwards_turn);
         isYourTurn = !isYourTurn;
+    }
+
+    private void updateLevelText()
+    {
+        String message = "Level: " + commandLength;
+        levelTextView.setText(message);
     }
 
     public void updateInReverse(SharedPreferences sharedPreferences) {
@@ -137,12 +150,14 @@ public class MainActivityFragment extends Fragment {
                     System.out.println("Made it through the round");
                     commandLength++;
                     steps = 0;
+                    updateLevelText();
                     createCommandSequence();
                     animateCommand();
                 }
             }
             else
             {
+                enableButtons(false);
                 // Display some message saying incorrect
                 // print (you made it x rounds!)
 //                DialogFragment gameResults = new GameResults();
@@ -158,6 +173,7 @@ public class MainActivityFragment extends Fragment {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        updateLevelText();
                         animateCommand();
                     }
                 }, 3500);
@@ -221,7 +237,7 @@ public class MainActivityFragment extends Fragment {
         }
     }
 */
-    
+
     /*private void animateAlphaBlink(Button button) {
         Animation animation = new AlphaAnimation(1,0);
         //animation.setRepeatCount(5);
@@ -281,8 +297,8 @@ public class MainActivityFragment extends Fragment {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                enableButtons(true);
                 changeTurn();
+                enableButtons(true);
             }
         }, 1500*commandSequence.size());
         System.out.println("Animation complete");
