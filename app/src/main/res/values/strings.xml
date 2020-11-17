@@ -4,4 +4,6 @@
     <string name="edwards_turn">Edward is Commanding</string>
     <string name="your_turn">Your Turn, Obey Edward</string>
     <string name="settings">Settings</string>
+    <string name="end_message">Wrong Answer. You got to level:</string>
+    <string name="new_game">Starting New Game</string>
 </resources>

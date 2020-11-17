@@ -1,5 +1,8 @@
 package com.example.edwardcommandsyou;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,12 +18,16 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class MainActivityFragment extends Fragment {
     private SecureRandom random; // for randomizing button flashes
@@ -138,45 +145,89 @@ public class MainActivityFragment extends Fragment {
             {
                 // Display some message saying incorrect
                 // print (you made it x rounds!)
-                System.out.println("Wrong answer");
+//                DialogFragment gameResults = new GameResults();
+//                use FragmentManager to display the DialogFragment
+//                gameResults.setCancelable(false);
+//                gameResults.show(getFragmentManager(), "quiz results");
+
+                String message = getString(R.string.end_message) + " " + commandLength + " " + getString(R.string.new_game);
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
                 commandLength = 1;
                 steps = 0;
                 createCommandSequence();
-                animateCommand();
-                // Says how many you made it
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        animateCommand();
+                    }
+                }, 3500);
+                System.out.println("Wrong answer");
+
+                // Dr. Porter fix
+                //(MainActivityFragment) getFragmentManager().findFragmentById(R.id.quizFragment)).resetQuiz();
+
             }
 
+/*            // this section should check if correct button has been pressed
+            int index = !inReverse ? stepsTakenInObeying : (commandLength - 1 - stepsTakenInObeying);
+            boolean isCorrect = commandSequence.get(index).equals(button);
 
-//            // this section should check if correct button has been pressed
-//            int index = !inReverse ? stepsTakenInObeying : (commandLength - 1 - stepsTakenInObeying);
-//            boolean isCorrect = commandSequence.get(index).equals(button);
-//
-//            // the button has been pressed so another step has been taken in obeying the sequence
-//            ++stepsTakenInObeying;
-//            if (isCorrect) {
-//                // if a correct button was pressed and we are at the end of a command
-//                if (stepsTakenInObeying == commandLength) {
-//                    // if a correct button was pressed and we are at the end of a round
-//                    if (roundProgress == roundLength) {
-//                        // reset round counter
-//                        roundProgress = 0;
-//                    }
-//                    // reset step in command counter
-//                    stepsTakenInObeying = 0;
-//                }
-//            }
-//            else {
-//
-//            }
+            // the button has been pressed so another step has been taken in obeying the sequence
+            ++stepsTakenInObeying;
+            if (isCorrect) {
+                // if a correct button was pressed and we are at the end of a command
+                if (stepsTakenInObeying == commandLength) {
+                    // if a correct button was pressed and we are at the end of a round
+                    if (roundProgress == roundLength) {
+                        // reset round counter
+                        roundProgress = 0;
+                    }
+                    // reset step in command counter
+                    stepsTakenInObeying = 0;
+                }
+            }
+            else {
+
+            }*/
         }
     };
 
-    private void animateAlphaBlink(Button button) {
+    /*public static class GameResults extends DialogFragment
+    {
+
+        // create an AlertDialog and return it
+        @Override
+        public Dialog onCreateDialog(Bundle bundle)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            String endMessage = getString(R.string.end_message) + commandLength;
+            builder.setMessage(endMessage);
+
+            // "Reset Quiz" Button
+            builder.setPositiveButton(R.string.new_game, new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            commandLength = 1;
+                            steps = 0;
+                            createCommandSequence();
+                            animateCommand();
+                            //(MainActivityFragment) getFragmentManager().findFragmentById(R.id.gameFragment)).resetGame();
+                        }
+                    }
+            );
+
+            return builder.create(); // return the AlertDialog
+        }
+    }
+*/
+    
+    /*private void animateAlphaBlink(Button button) {
         Animation animation = new AlphaAnimation(1,0);
         //animation.setRepeatCount(5);
         animation.setDuration(500);
         button.startAnimation(animation);
-    }
+    }*/
 
     // two runnable's run at same time so first delay must be less than second
     private void animateColorBlink(final Button button) {
@@ -206,11 +257,11 @@ public class MainActivityFragment extends Fragment {
         }
     }
 
-    private void reset()
+    /*private void reset()
     {
         commandSequence.clear();
         commandLength=1;
-    }
+    }*/
 
     // This doesn't work for animateAlphaBlink or animateColorBlink
     // All the buttons flash at once
