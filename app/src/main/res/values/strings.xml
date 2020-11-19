@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">EdwardCommandsYou</string>
-    <string name="welcome">Welcome to Edward Commands You</string>
+    <string name="app_name">Edward Commands You</string>
+    <string name="welcome">Edward Commands You</string>
     <string name="edwards_turn">Edward is Commanding</string>
     <string name="your_turn">Your Turn, Obey Edward</string>
     <string name="settings">Settings</string>

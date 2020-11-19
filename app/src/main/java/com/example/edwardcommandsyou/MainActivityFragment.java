@@ -108,7 +108,7 @@ public class MainActivityFragment extends Fragment {
 
     private void updateLevelText()
     {
-        String message = "Level: " + commandLength;
+        String message = "Current Score: " + (commandLength-1);
         levelTextView.setText(message);
     }
 
@@ -166,6 +166,7 @@ public class MainActivityFragment extends Fragment {
 //                gameResults.show(getFragmentManager(), "quiz results");
 
                 String message = getString(R.string.end_message) + " " + commandLength + " " + getString(R.string.new_game);
+                commandSequence.clear();
                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
                 commandLength = 1;
                 steps = 0;
